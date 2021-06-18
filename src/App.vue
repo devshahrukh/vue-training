@@ -1,34 +1,22 @@
 <template>
   <div id="app">
-    <h1>MIxins and App Same Data - {{sameData}}</h1>
-
-    <h1><i>New name</i> - {{name}}</h1>
-    <h1><i>Old name</i> - {{oldName || 'Default'}}</h1>
-
-    <p>Name Property: {{name | reverseString}}</p>
-    <h1><strong>Configurations: </strong>{{config | suffixmixins}}</h1><h1></h1>
-    <span>Array Length - {{arrayLength}}</span> <br>
-
-    <button @click="clickMe">Click to Change</button> <br>
-    <input type="text" v-model="name">
-
-
-    <p v-for="(name, index) in names" :key="index">
-      <span v-if="index % 2 === 0">{{index}} - {{name | upperCaseLetters | suffixmixins}} - Even</span>
-      <span v-else-if="index % 2 > 0">{{index}} - {{name | lowerCaseLetters}} - Odd</span>
-    </p>
+    <h1>{{name}}</h1>
+    <company-name :parent-name="name" @eventEmitted="childMethod"/>
   </div>
 </template>
 
 <script>
-import generalMixins from './mixins/general.js'
+
+import CompanyName from './components/CompanyName'
+import generalMixins from './mixins/general'
 
 export default {
   name: 'App',
   mixins: [generalMixins],
+  components: {CompanyName},
   data() {
     return {
-      name: 'Bold Text',
+      name: 'This is text coming from state of App.vue as a Prop for a component',
       oldName: '',
       age: 11,
       sameData: 'OverrideData',
@@ -53,6 +41,10 @@ export default {
     },
     getName () {
       return this.name
+    },
+    childMethod (data) {
+      this.name = data.eventParam
+      console.log('Event Clicked', data)
     }
   },
   filters: {
